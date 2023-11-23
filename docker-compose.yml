@@ -1,0 +1,162 @@
+version: "3.9"
+secrets:
+  AUTHELIA_JWT_SECRET:
+    file: ${PWD}/data/authelia/secrets/AUTHELIA_JWT_SECRET
+  SESSION_SECRET:
+    file: ${PWD}/data/authelia/secrets/SESSION_SECRET
+  STORAGE_PASSWORD:
+    file: ${PWD}/data/authelia/secrets/STORAGE_PASSWORD
+  STORAGE_ENCRYPTION_KEY:
+    file: ${PWD}/data/authelia/secrets/STORAGE_ENCRYPTION_KEY
+  LLDAP_JWT_SECRET:
+    file: ${PWD}/data/lldap/secrets/LLDAP_JWT_SECRET
+  LLDAP_PASSWORD:
+    file: ${PWD}/data/lldap/secrets/LLDAP_PASSWORD
+  LLDAP_STORAGE_PASSWORD:
+    file: ${PWD}/data/lldap/secrets/LLDAP_STORAGE_PASSWORD
+
+services:
+  proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: apperture-proxy
+    depends_on:
+      - authelia
+    restart: unless-stopped
+    ports:
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port2
+      - '1883:1883' # MQTT
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+    volumes:
+      - ${PWD}/data/nginx/data:/data
+      - ${PWD}/data/letsencrypt:/etc/letsencrypt
+      - ${PWD}/data/nginx/snippets:/snippets:ro
+    networks:
+      apperture:
+        
+  whoami:
+    container_name: apperture-whoami
+    image: docker.io/traefik/whoami
+    restart: unless-stopped
+    networks:
+      apperture:
+    environment:
+      TZ: 'Europe/London'
+      
+  authelia:
+    container_name: authelia
+    image: authelia/authelia
+    depends_on:
+      authelia-postgres:
+        condition: service_healthy
+      lldap:
+        condition: service_healthy
+      # - redis
+    restart: unless-stopped
+    volumes:
+      - ${PWD}/data/authelia/config:/config
+    secrets: [AUTHELIA_JWT_SECRET, SESSION_SECRET, STORAGE_PASSWORD, STORAGE_ENCRYPTION_KEY, LLDAP_PASSWORD]
+    environment:
+      TZ: 'Europe/London'
+      # Secrets
+      AUTHELIA_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
+      AUTHELIA_SESSION_SECRET_FILE: /run/secrets/SESSION_SECRET
+      AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/STORAGE_PASSWORD
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/STORAGE_ENCRYPTION_KEY
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: /run/secrets/LLDAP_PASSWORD
+      # General
+      AUTHELIA_DEFAULT_REDIRECTION_URL: https://whoami.mcfe.itservices.manchester.ac.uk
+      AUTHELIA_SERVER_PATH: "authelia"
+      AUTHELIA_SERVER_BUFFERS_READ: 16384
+      AUTHELIA_SERVER_BUFFERS_WRITE: 16384
+      # Session
+      AUTHELIA_SESSION_EXPIRATION: 1h
+      AUTHELIA_SESSION_INACTIVITY: 20m
+      AUTHELIA_SESSION_REMEMBER_ME_DURATION: 12h
+      # Postgres
+      AUTHELIA_STORAGE_POSTGRES_HOST: apperture-authelia-postgres
+      AUTHELIA_STORAGE_POSTGRES_PORT: 5432
+      AUTHELIA_STORAGE_POSTGRES_DATABASE: authelia
+      AUTHELIA_STORAGE_POSTGRES_USERNAME: authelia
+      # LDAP
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_URL: ldap://apperture-ldap:3890
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_BASE_DN: dc=example,dc=com
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_ADDITIONAL_USERS_DN: ou=people
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_ADDITIONAL_GROUPS_DN: ou=groups
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_GROUP_NAME_ATTRIBUTE: cn
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USER: cn=admin,ou=people,dc=example,dc=com
+      # Redis
+      # AUTHELIA_SESSION_REDIS_HOST: apperture-redis
+      # AUTHELIA_SESSION_REDIS_PORT: 6379
+    networks:
+      apperture:
+
+  authelia-postgres:
+    container_name: apperture-authelia-postgres
+    image: postgres
+    restart: unless-stopped
+    secrets: [STORAGE_PASSWORD]
+    environment:
+      POSTGRES_USER: authelia
+      POSTGRES_PASSWORD_FILE: /run/secrets/STORAGE_PASSWORD
+      POSTGRES_DB: authelia
+    networks:
+      smalldata:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authelia"]
+      interval: 5s
+      timeout: 5s
+      retries: 5    
+
+  lldap:
+    container_name: apperture-ldap
+    image: nitnelave/lldap:stable
+    restart: unless-stopped
+    ports:
+      - 3890:3890
+    depends_on:
+      lldap-postgres:
+        condition: service_healthy
+    secrets: [LLDAP_JWT_SECRET, LLDAP_PASSWORD, LLDAP_STORAGE_PASSWORD]
+    environment:
+      UID: 1000
+      GID: 1000
+      TZ: Europe/London
+      LLDAP_JWT_SECRET_FILE: /run/secrets/LLDAP_JWT_SECRET
+      LLDAP_LDAP_USER_PASS_FILE: /run/secrets/LLDAP_PASSWORD
+      LLDAP_LDAP_BASE_DN: dc=example,dc=com
+      # cn=admin,ou=people,dc=example,dc=com
+      LLDAP_DATABASE_URL: postgres://lldap:lldap@lldap-postgres/lldap
+    volumes:
+      - lldap-data:/data
+    networks:
+      apperture:
+
+  lldap-postgres:
+    container_name: smalldata-lldap-postgres
+    image: postgres
+    restart: unless-stopped
+    secrets: [LLDAP_STORAGE_PASSWORD]
+    environment:
+      POSTGRES_USER: lldap
+      POSTGRES_PASSWORD: lldap
+      #POSTGRES_PASSWORD_FILE: /run/secrets/LLDAP_STORAGE_PASSWORD
+      POSTGRES_DB: lldap
+    volumes:
+      - lldap-postgres-data:/var/lib/postgresql/data
+    networks:
+      smalldata:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lldap"]
+      interval: 5s
+      timeout: 5s
+      retries: 5 
+
+networks:
+  apperture:
+
+volumes:
+  lldap-data:
+  lldap-postgres-data:
