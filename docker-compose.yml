@@ -149,7 +149,7 @@ services:
       apperture:
 
   lldap-postgres:
-    container_name: smalldata-lldap-postgres
+    container_name: apperture-lldap-postgres
     image: postgres
     restart: unless-stopped
     secrets: [LLDAP_STORAGE_PASSWORD]
