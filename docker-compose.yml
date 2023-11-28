@@ -30,9 +30,8 @@ services:
       # Uncomment this if IPv6 is not enabled on your host
       # DISABLE_IPV6: 'true'
     volumes:
-      - ${PWD}/data/nginx/data:/data
-      - ${PWD}/data/letsencrypt:/etc/letsencrypt
-      - ${PWD}/data/nginx/snippets:/snippets:ro
+      - nginx-proxy:/data
+      - ${PWD}/config/nginx/snippets:/snippets:ro
     networks:
       apperture:
         
@@ -56,7 +55,9 @@ services:
       # - redis
     restart: unless-stopped
     volumes:
-      - ${PWD}/data/authelia/config:/config
+      #- ${PWD}/config/authelia/config:/config
+      - ./config/authelia/config/configuration.yml.template:/etc/authelia/configuration.yml.template
+      - ./config/authelia/entrypoint.sh:/etc/authelia/entrypoint.sh
     secrets: [AUTHELIA_JWT_SECRET,
     AUTHELIA_SESSION_SECRET,
     AUTHELIA_STORAGE_PASSWORD,
