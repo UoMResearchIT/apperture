@@ -1,0 +1,111 @@
+theme: light
+
+## Set the default 2FA method for new users and for when a user has a preferred method configured that has been
+## disabled. This setting must be a method that is enabled.
+## Options are totp, webauthn, mobile_push.
+default_2fa_method: ""
+
+server:
+  host: 0.0.0.0
+  port: 9091
+  path: ""
+  headers:
+    csp_template: ""
+
+log:
+  level: debug
+  file_path: /config/authelia.log
+  keep_stdout: true
+  
+##
+## TOTP Configuration
+##
+totp:
+  disable: false
+  issuer: authelia.com
+  algorithm: sha1
+  digits: 6
+  period: 30
+  skew: 1
+  secret_size: 32
+
+webauthn:
+  disable: false
+  timeout: 60s
+  display_name: Authelia
+  attestation_conveyance_preference: indirect
+  user_verification: preferred
+
+# duo_api:
+  # disable: false
+  # hostname: api-123456789.example.com
+  # integration_key: ABCDEF
+  ## Secret can also be set using a secret: https://www.authelia.com/c/secrets
+  # secret_key: 1234567890abcdefghifjkl
+  # enable_self_enrollment: false
+
+ntp:
+  address: "time.cloudflare.com:123"
+  version: 4
+  max_desync: 3s
+  disable_startup_check: false
+  disable_failure: false
+
+authentication_backend:
+  password_reset:
+    disable: false
+    custom_url: ""
+  refresh_interval: 5m
+
+  ldap:
+    implementation: custom
+    timeout: 5s
+    start_tls: false
+    users_filter: (&({username_attribute}={input})(objectClass=person))
+    username_attribute: uid
+    mail_attribute: mail
+    display_name_attribute: displayName
+    groups_filter: "(member={dn})"
+    permit_referrals: false
+    permit_unauthenticated_bind: false
+
+password_policy:
+  standard:
+    enabled: false
+    min_length: 8
+    max_length: 0
+    require_uppercase: true
+    require_lowercase: true
+    require_number: true
+    require_special: true
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain:
+      - smalldataio.duckdns.org
+      - "*.smalldataio.duckdns.org"
+      policy: one_factor
+      
+session:
+  name: authelia_session
+  domain: smalldataio.duckdns.org
+  same_site: lax  
+
+regulation:
+  max_retries: 3
+  find_time: 2m
+  ban_time: 5m
+
+storage:
+  postgres:
+    schema: public
+    timeout: 5s
+
+## The available providers are: filesystem, smtp. You must use only one of these providers.
+notifier:
+  disable_startup_check: false
+  filesystem:
+    filename: /config/notification.txt
+
+...
