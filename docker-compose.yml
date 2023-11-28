@@ -34,6 +34,10 @@ services:
       - ${PWD}/config/nginx/snippets:/snippets:ro
     networks:
       apperture:
+    healthcheck:
+      test: ["CMD", "/bin/check-health"]
+      interval: 10s
+      timeout: 3s
         
   whoami:
     container_name: apperture-whoami
