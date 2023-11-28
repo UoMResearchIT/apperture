@@ -1,19 +1,19 @@
 version: "3.9"
 secrets:
   AUTHELIA_JWT_SECRET:
-    file: ${PWD}/data/authelia/secrets/AUTHELIA_JWT_SECRET
-  SESSION_SECRET:
-    file: ${PWD}/data/authelia/secrets/SESSION_SECRET
-  STORAGE_PASSWORD:
-    file: ${PWD}/data/authelia/secrets/STORAGE_PASSWORD
-  STORAGE_ENCRYPTION_KEY:
-    file: ${PWD}/data/authelia/secrets/STORAGE_ENCRYPTION_KEY
+    file: ${PWD}/config/authelia/secrets/AUTHELIA_JWT_SECRET
+  AUTHELIA_SESSION_SECRET:
+    file: ${PWD}/config/authelia/secrets/AUTHELIA_SESSION_SECRET
+  AUTHELIA_STORAGE_PASSWORD:
+    file: ${PWD}/config/authelia/secrets/AUTHELIA_STORAGE_PASSWORD
+  AUTHELIA_STORAGE_ENCRYPTION_KEY:
+    file: ${PWD}/config/authelia/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
   LLDAP_JWT_SECRET:
-    file: ${PWD}/data/lldap/secrets/LLDAP_JWT_SECRET
+    file: ${PWD}/config/lldap/secrets/LLDAP_JWT_SECRET
   LLDAP_PASSWORD:
-    file: ${PWD}/data/lldap/secrets/LLDAP_PASSWORD
+    file: ${PWD}/config/lldap/secrets/LLDAP_PASSWORD
   LLDAP_STORAGE_PASSWORD:
-    file: ${PWD}/data/lldap/secrets/LLDAP_STORAGE_PASSWORD
+    file: ${PWD}/config/lldap/secrets/LLDAP_STORAGE_PASSWORD
 
 services:
   proxy:
@@ -57,14 +57,18 @@ services:
     restart: unless-stopped
     volumes:
       - ${PWD}/data/authelia/config:/config
-    secrets: [AUTHELIA_JWT_SECRET, SESSION_SECRET, STORAGE_PASSWORD, STORAGE_ENCRYPTION_KEY, LLDAP_PASSWORD]
+    secrets: [AUTHELIA_JWT_SECRET,
+    AUTHELIA_SESSION_SECRET,
+    AUTHELIA_STORAGE_PASSWORD,
+    AUTHELIA_STORAGE_ENCRYPTION_KEY,
+    LLDAP_PASSWORD]
     environment:
       TZ: 'Europe/London'
       # Secrets
       AUTHELIA_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
-      AUTHELIA_SESSION_SECRET_FILE: /run/secrets/SESSION_SECRET
-      AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/STORAGE_PASSWORD
-      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/STORAGE_ENCRYPTION_KEY
+      AUTHELIA_SESSION_SECRET_FILE: /run/secrets/AUTHELIA_SESSION_SECRET
+      AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/AUTHELIA_STORAGE_PASSWORD
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: /run/secrets/LLDAP_PASSWORD
       # General
       AUTHELIA_DEFAULT_REDIRECTION_URL: https://whoami.mcfe.itservices.manchester.ac.uk
@@ -97,10 +101,10 @@ services:
     container_name: apperture-authelia-postgres
     image: postgres
     restart: unless-stopped
-    secrets: [STORAGE_PASSWORD]
+    secrets: [AUTHELIA_STORAGE_PASSWORD]
     environment:
       POSTGRES_USER: authelia
-      POSTGRES_PASSWORD_FILE: /run/secrets/STORAGE_PASSWORD
+      POSTGRES_PASSWORD_FILE: /run/secrets/AUTHELIA_STORAGE_PASSWORD
       POSTGRES_DB: authelia
     networks:
       smalldata:
