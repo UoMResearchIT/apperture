@@ -107,7 +107,7 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/AUTHELIA_STORAGE_PASSWORD
       POSTGRES_DB: authelia
     networks:
-      smalldata:
+      apperture:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U authelia"]
       interval: 5s
@@ -151,7 +151,7 @@ services:
     volumes:
       - lldap-postgres-data:/var/lib/postgresql/data
     networks:
-      smalldata:
+      apperture:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U lldap"]
       interval: 5s
@@ -162,5 +162,6 @@ networks:
   apperture:
 
 volumes:
+  nginx-proxy:
   lldap-data:
   lldap-postgres-data:
