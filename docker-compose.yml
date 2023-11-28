@@ -76,7 +76,7 @@ services:
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: /run/secrets/LLDAP_PASSWORD
       # General
-      AUTHELIA_DEFAULT_REDIRECTION_URL: https://whoami.mcfe.itservices.manchester.ac.uk
+      AUTHELIA_DEFAULT_REDIRECTION_URL: https://whoami.${URL}
       AUTHELIA_SERVER_PATH: "authelia"
       AUTHELIA_SERVER_BUFFERS_READ: 16384
       AUTHELIA_SERVER_BUFFERS_WRITE: 16384
@@ -84,6 +84,7 @@ services:
       AUTHELIA_SESSION_EXPIRATION: 1h
       AUTHELIA_SESSION_INACTIVITY: 20m
       AUTHELIA_SESSION_REMEMBER_ME_DURATION: 12h
+      AUTHELIA_SESSION_DOMAIN: ${URL}
       # Postgres
       AUTHELIA_STORAGE_POSTGRES_HOST: apperture-authelia-postgres
       AUTHELIA_STORAGE_POSTGRES_PORT: 5432
@@ -96,9 +97,13 @@ services:
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_ADDITIONAL_GROUPS_DN: ou=groups
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_GROUP_NAME_ATTRIBUTE: cn
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USER: cn=admin,ou=people,dc=example,dc=com
-      # Redis
-      # AUTHELIA_SESSION_REDIS_HOST: apperture-redis
-      # AUTHELIA_SESSION_REDIS_PORT: 6379
+      # RULES
+      AUTHELIA_ACCESS_CONTROL_RULES: |- 
+        - domain:
+            - ${URL}
+            - "*.${URL}"
+            policy: one_factor
+    entrypoint: ["sh", "/etc/authelia/entrypoint.sh"]
     networks:
       apperture:
 
