@@ -59,9 +59,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     volumes:
-      #- ${PWD}/config/authelia/config:/config
-      - ./config/authelia/config/configuration.yml.template:/etc/authelia/configuration.yml.template
-      - ./config/authelia/entrypoint.sh:/etc/authelia/entrypoint.sh
+      - ${PWD}/config/authelia/config:/config
     secrets: [AUTHELIA_JWT_SECRET,
     AUTHELIA_SESSION_SECRET,
     AUTHELIA_STORAGE_PASSWORD,
