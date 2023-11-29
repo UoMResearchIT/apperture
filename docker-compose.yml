@@ -168,5 +168,6 @@ networks:
 
 volumes:
   nginx-proxy:
+  nginx-certs:
   lldap-data:
   lldap-postgres-data:
