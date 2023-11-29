@@ -95,13 +95,10 @@ services:
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_ADDITIONAL_GROUPS_DN: ou=groups
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_GROUP_NAME_ATTRIBUTE: cn
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USER: cn=admin,ou=people,dc=example,dc=com
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USERS_FILTER: (&({username_attribute}={input})(objectClass=person))
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_GROUPS_FILTER: "(member={dn})"
       # RULES
-      AUTHELIA_ACCESS_CONTROL_RULES: |- 
-        - domain:
-            - ${URL}
-            - "*.${URL}"
-            policy: one_factor
-    entrypoint: ["sh", "/etc/authelia/entrypoint.sh"]
+      AUTHELIA_ACCESS_CONTROL_DEFAULT_POLICY: one_factor
     networks:
       apperture:
 
