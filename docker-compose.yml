@@ -50,7 +50,7 @@ services:
       TZ: 'Europe/London'
       
   authelia:
-    container_name: authelia
+    container_name: apperture-authelia
     image: authelia/authelia
     depends_on:
       authelia-postgres:
