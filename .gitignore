@@ -1,2 +1,4 @@
 .env
 **/secrets/*
+config/authelia/config/authelia.log
+config/authelia/config/notification.txt
