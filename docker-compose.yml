@@ -57,7 +57,6 @@ services:
         condition: service_healthy
       lldap:
         condition: service_healthy
-      # - redis
     restart: unless-stopped
     volumes:
       #- ${PWD}/config/authelia/config:/config
