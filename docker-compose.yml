@@ -31,7 +31,8 @@ services:
       # DISABLE_IPV6: 'true'
     volumes:
       - nginx-proxy:/data
-      - ${PWD}/config/nginx/snippets:/snippets:ro
+      - nginx-certs:/etc/letsencrypt
+      - ${PWD}/config/authelia/snippets:/snippets:ro
     networks:
       apperture:
     healthcheck:
