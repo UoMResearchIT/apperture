@@ -15,3 +15,8 @@ do
     echo Generating $file
     tr -cd '[:alnum:]' < /dev/urandom | fold -w "64" | head -n 1 > $file
 done
+
+# replace $URL in config/authelia/snippets/authelia-authrequest.conf with the URL stored in the .env file
+sed "s|\$URL|$(grep URL .env | cut -d '=' -f2)|g" \
+    config/authelia/snippets/authelia-authrequest.conf.template \
+    > config/authelia/snippets/authelia-authrequest.conf
