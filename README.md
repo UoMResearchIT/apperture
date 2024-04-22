@@ -26,6 +26,8 @@ Edit URL to your desired value.
 ./generate_passwords.sh
 ```
 
+The script will print the LLDAP admin credentials, that you will need to setup users.
+
 ### Launch apperture
 
 ```shell
@@ -69,6 +71,46 @@ location / {
     proxy_pass $forward_scheme://$server:$port;
 }
 ```
+
+#### Setup the user-admin site
+Add another proxy host:
+- Add a subdomain, for example `users.mylovelydomain.org`.
+- Set the Forward Hostname to `apperture-ldap`
+- Use the port `17170`.
+- In the "Advanced" tab, paste:
+    ```
+    include /snippets/authelia-location.conf;
+    location / {
+        include /snippets/proxy.conf;
+        include /snippets/authelia-authrequest.conf;
+        proxy_pass $forward_scheme://$server:$port;
+    }
+    ```
+Go to `users.mylovelydomain.org` and login with the LLDAP admin credentials.
+Add a non-admin user.
+
+### Use with cloudflare tunnels
+Comment the exposed ports in the docker-compose file:
+```diff
+- - '80:80' # Public HTTP Port
+- - '443:443' # Public HTTPS Port
++ # - '80:80' # Public HTTP Port
++ # - '443:443' # Public HTTPS Port
+```
+- Login to cloudflare.
+- On the side menu, select "Zero Trust".
+- Click on "Networks" and then "Tunnels".
+- Click on "Create Tunnel".
+- Select cloudflared as the connector.
+- Choose a name for the tunnel, and save it.
+- Select next.
+
+You will now be able to add Public Hostnames.
+Using your domain (`mylovelydomain.org`), add the subdomains necessary for apperture (see the "Configure the proxy" section):
+- `whoami`
+- `authelia`
+- `users`
+In all three cases, make sure you select `http` for the type, and `apperture-proxy` for the url. You may leave the path empty.
 
 
 ## Explaination

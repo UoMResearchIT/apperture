@@ -22,7 +22,6 @@ do
 done
 
 # Echo the lldap password to the console
-
 echo "
  LLDAP admin credentials:
   User: admin
