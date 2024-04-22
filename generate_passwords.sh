@@ -12,8 +12,13 @@ pass_files=("config/lldap/secrets/LLDAP_JWT_SECRET" \
 
 for file in ${pass_files[@]}
 do
-    echo Generating $file
-    tr -cd '[:alnum:]' < /dev/urandom | fold -w "64" | head -n 1 > $file
+    # only generate passwords if the files do not exist
+    if [ ! -f $file ]; then
+        echo Generating $file
+        tr -cd '[:alnum:]' < /dev/urandom | fold -w "64" | head -n 1 > $file
+    else
+        echo Skipping $file - it already exists
+    fi
 done
 
 # Echo the lldap password to the console
