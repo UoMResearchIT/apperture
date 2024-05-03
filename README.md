@@ -167,7 +167,7 @@ services:
 
   cloudflared:
     image: cloudflare/cloudflared:latest
-    container_name: mylovelydomain-cloudflared
+    container_name: mylovelyproject-cloudflared
     restart: unless-stopped
     env_file:
       - ./config/cloudflared/.secret_token
