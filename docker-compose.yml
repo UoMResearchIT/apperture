@@ -1,4 +1,3 @@
-version: "3.9"
 secrets:
   AUTHELIA_JWT_SECRET:
     file: ${PWD}/config/authelia/secrets/AUTHELIA_JWT_SECRET
