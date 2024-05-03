@@ -40,23 +40,39 @@ docker compose up
 
 ### Configure the proxy
 
-#### Setup a route
-Go to `localhost:81` and login with the default credentials: 
+#### Setup your first route
+Go to [localhost:81](localhost:81) and login with the default credentials: 
 - admin@example.com
 - changeme
   
 Update the credentials to some that suit you.
 
 Click on the menu "Hosts" and then "Proxy Hosts". Add a Proxy Host:
-- Add a subdomain, e.g. `whoami.mylovelydomain.org`
-- set the Forward Hostname to `apperture-whoami`
-- Use the port `80`.
+- Add a subdomain
+  ```
+  whoami.mylovelydomain.org
+  ```
+- set the Forward Hostname to
+  ```
+  apperture-whoami
+  ```
+- Use the port
+  ```
+  80
+  ```
 
 #### Setup Authelia
 Add another proxy host:
-- Add a subdomain: `authelia.mylovelydomain.org` (this has to be `authelia`).
-- Set the Forward Hostname to `apperture-authelia`
-- Use the port `9091`.
+- Add a subdomain:
+  ```
+  authelia.mylovelydomain.org
+  ```
+- Set the Forward Hostname to
+  ```
+  apperture-authelia
+  ```
+- Use the port
+  ```9091```
 - In the "Advanced" tab, paste:
     ```
     location / {
@@ -64,6 +80,7 @@ Add another proxy host:
         proxy_pass $forward_scheme://$server:$port;
     }
     ```
+    
 #### Protect the route
 Click on the three vertical dots of the `whoami` route and click on "Edit".
 In the "Advanced" tab, paste:
@@ -78,9 +95,18 @@ location / {
 
 #### Setup the user-admin site
 Add another proxy host:
-- Add a subdomain, for example `users.mylovelydomain.org`.
-- Set the Forward Hostname to `apperture-ldap`
-- Use the port `17170`.
+- Add a subdomain, for example
+  ```
+  users.mylovelydomain.org
+  ```
+- Set the Forward Hostname to
+  ```
+  apperture-ldap
+  ```
+- Use the port
+  ```
+  17170
+  ```
 - In the "Advanced" tab, paste:
     ```
     include /snippets/authelia-location.conf;
