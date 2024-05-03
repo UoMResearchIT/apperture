@@ -41,8 +41,12 @@ docker compose up
 ### Configure the proxy
 
 #### Setup a route
-Go to `localhost:81` and login with the default credentials (admin@example.org and changeme).
-Update theadmin credentials
+Go to `localhost:81` and login with the default credentials: 
+- admin@example.com
+- changeme
+  
+Update the credentials to some that suit you.
+
 Click on the menu "Hosts" and then "Proxy Hosts". Add a Proxy Host:
 - Add a subdomain, e.g. `whoami.mylovelydomain.org`
 - set the Forward Hostname to `apperture-whoami`
