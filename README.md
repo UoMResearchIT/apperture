@@ -162,21 +162,6 @@ docker compuse up
 - Click on "Add a Tunnel".
 - Select cloudflared as the connector.
 - Choose a name for the tunnel, and save it.
-- Select next.
-
-You will now be able to add Public Hostnames.
-Using your domain (`mylovelydomain.org`), add the subdomains necessary for apperture (see the [Configure the proxy](#configure-the-proxy) section):
-- `whoami`
-- `authelia`
-- `users`
-In all three cases, make sure you select `http` for the type, and `apperture-proxy` for the url. You may leave the path empty.
-
-#### Connect your project's cloudflare with apperture
-
-Copy the cloudflare tunnel token:
-- Go to the cloudflare dashboard.
-- On the side menu, select "Zero Trust".
-- Click on "Networks" and then "Tunnels".
 - Click on your tunnel.
 - Click on "Configure".
 - In "Choose your environment", select "Docker".
@@ -209,6 +194,15 @@ services:
 You can now launch the cloudflared service with `docker-compose up -d cloudflared`.
 
 **Note**: Each domain you add to cloudflare also needs to be added in the proxy, and protected in the "Advanced" tab (See the [Protect the Route](#protect-the-route) section).
+
+#### Add hostnames
+
+You will now be able to add Public Hostnames.
+Using your domain (`mylovelydomain.org`), add the subdomains necessary for apperture (see the [Configure the proxy](#configure-the-proxy) section):
+- `whoami`
+- `authelia`
+- `users`
+In all three cases, make sure you select `http` for the type, and `apperture-proxy` for the url. You may leave the path empty.
 
 
 ## Explaination
