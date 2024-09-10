@@ -63,7 +63,7 @@ Go to [localhost:81](localhost:81) and login with the default credentials:
 Update the credentials to some that suit you.
 
 Click on the menu "Hosts" and then "Proxy Hosts". Add a Proxy Host:
-- Add a subdomain
+- Add a full domain name (subdomain and domain) to the Domain Name box:
   ```
   whoami.mylovelydomain.org
   ```
@@ -155,7 +155,6 @@ docker compuse up
 
 #### Set up tunnels on Cloudflare
 
-```
 - Login to cloudflare.
 - On the side menu, select "Zero Trust".
 - Create a team name and subscribe to the free plan
@@ -167,9 +166,13 @@ docker compuse up
 - Click on "Configure".
 - In "Choose your environment", select "Docker".
 - Copy the code in the "Install and run a connector" box. It includes the token after the flag `--token`.
-```
 
-Now save the token into a file `config/cloudflared/.secret_token` in your project.
+Now save the token into a file `config/cloudflared/.secret_token` in your project.:
+
+```shell
+mkdir -p config/cloudflared/
+echo  config/cloudflared/.secret_token
+```
 
 The file should look like this:
 ```
@@ -197,9 +200,17 @@ You can now launch the cloudflared service with `docker-compose up -d cloudflare
 
 **Note**: Each domain you add to cloudflare also needs to be added in the proxy, and protected in the "Advanced" tab (See the [Protect the Route](#protect-the-route) section).
 
-#### Add hostnames
+#### Add hostnames to cloudflare
 
 You will now be able to add Public Hostnames.
+
+- Go to the tunnels page
+- Add a public hostname
+  - **Subdomain:** whoami
+  - **Domain:** mylovelydomain.org
+  - **Service Type:** HTTP
+  - **URL:** apperture-proxy
+
 Using your domain (`mylovelydomain.org`), add the subdomains necessary for apperture (see the [Configure the proxy](#configure-the-proxy) section):
 - `whoami`
 - `authelia`
