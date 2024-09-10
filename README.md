@@ -20,13 +20,23 @@ Edit URL to your desired value.
 + URL=mylovelydomain.org
 ```
 
-### Setup the environment
+### Setup the environment and obtain admin credentials
 
 ```shell
 ./generate_passwords.sh
 ```
 
 The script will print the LLDAP admin credentials, that you will need to setup users.
+
+```shell
+Generating ...
+Generating ...
+Generating ...
+
+LLDAP admin credentials:
+  User: admin
+  Pass: kGb6eX8M4oVjd2WeKzGaK3NYTyz29eLmqUvX78JqfTnev9cEQNG9yWsV2w4QfWs88yLxnvj9
+```
 
 ### Launch apperture
 
