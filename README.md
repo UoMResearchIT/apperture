@@ -217,6 +217,16 @@ Using your domain (`mylovelydomain.org`), add the subdomains necessary for apper
 - `users`
 In all three cases, make sure you select `http` for the type, and `apperture-proxy` for the url. You may leave the path empty.
 
+## Troubleshooting
+
+### Authelia doesn't start due to NTP failures
+
+In the docker compose config for the Authelia service, add two environment variables:
+
+```yaml
+AUTHELIA_NTP_DISABLE_STARTUP_CHECK: True
+AUTHELIA_NTP_DISABLE_FAILURE: True
+```
 
 ## Explaination
 
