@@ -39,6 +39,10 @@ LLDAP admin credentials:
   Pass: kGb6eX8M4oVjd2WeKzGaK3NYTyz29eLmqUvX78JqfTnev9cEQNG9yWsV2w4QfWs88yLxnvj9
 ```
 
+**Securly save these credientials for later
+** 
+We suggest using a password manger. 
+
 ### Launch apperture
 
 ```shell
