@@ -135,12 +135,25 @@ Go to `users.mylovelydomain.org` and login with the LLDAP admin credentials.
 Add a non-admin user.
 
 ### Use with cloudflare tunnels
+
+#### Remove exposed ports 
+
 Comment the exposed ports in the docker-compose file:
 ```diff
 - - '80:80' # Public HTTP Port
 - - '443:443' # Public HTTPS Port
 + # - '80:80' # Public HTTP Port
 + # - '443:443' # Public HTTPS Port
+
+Now restart apperture:
+
+```shell
+docker compose down
+docker compuse up
+```
+
+#### Set up tunnels on Cloudflare
+
 ```
 - Login to cloudflare.
 - On the side menu, select "Zero Trust".
