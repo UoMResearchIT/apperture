@@ -157,6 +157,7 @@ docker compuse up
 ```
 - Login to cloudflare.
 - On the side menu, select "Zero Trust".
+- Create a team name and subscribe to the free plan
 - Click on "Networks" and then "Tunnels".
 - Click on "Create Tunnel".
 - Select cloudflared as the connector.
