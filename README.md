@@ -166,6 +166,7 @@ docker compuse up
 - Click on "Configure".
 - In "Choose your environment", select "Docker".
 - Copy the code in the "Install and run a connector" box. It includes the token after the flag `--token`.
+```
 
 Now save the token into a file `config/cloudflared/.secret_token` in your project.
 
