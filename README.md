@@ -144,6 +144,7 @@ Comment the exposed ports in the docker-compose file:
 - - '443:443' # Public HTTPS Port
 + # - '80:80' # Public HTTP Port
 + # - '443:443' # Public HTTPS Port
+```
 
 Now restart apperture:
 
