@@ -2,6 +2,12 @@
 
 Apperture is a secure web portal for protecting web applications. It takes the form of a docker-compose configuration and is merely the combination of several excellent open source containers.
 
+## Preqrequisites 
+
+You *must* have a registered domain for this guide to work. 
+
+We suggest cloudflare for registering domains but many other services are available.
+
 ## Getting started
 
 ### Create env file
