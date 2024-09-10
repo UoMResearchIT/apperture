@@ -15,7 +15,7 @@ do
     # only generate passwords if the files do not exist
     if [ ! -f $file ]; then
         echo Generating $file
-        tr -cd '[:alnum:]' < /dev/urandom | fold -w "64" | head -n 1 > $file
+        docker run authelia/authelia:latest authelia crypto rand --length 64 --charset alphanumeric | awk '{print $3}' > $file
     else
         echo Skipping $file - it already exists
     fi
